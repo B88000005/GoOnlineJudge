@@ -4,7 +4,7 @@
 sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list
 apt-get update
 apt-get -y upgrade
-apt-get install -y build-essential mongodb flex openjdk-7-jdk
+apt-get install -y build-essential mongodb flex openjdk-7-jdk git
 rm -rf /var/lib/apt/lists/*
 
 # Install Golang.
@@ -18,7 +18,7 @@ mkdir -p /home/acm/go/src /home/acm/go/pkg /home/acm/go/bin
 export GOROOT=/home/acm/goroot
 export GOPATH=/home/acm/go
 export OJ_HOME=$GOPATH/src
-export DATA_PATH=$GOPATH/Data
+export DATA_PATH=$OJ_HOME/ProblemData
 export LOG_PATH=$OJ_HOME/log
 export RUN_PATH=$OJ_HOME/run
 export JUDGE_HOST="http://127.0.0.1:8888"
@@ -36,6 +36,7 @@ rm -rf /var/lib/apt/lists/*
 mkdir -p $OJ_HOME/ProblemData
 mkdir -p $OJ_HOME/run
 mkdir -p $OJ_HOME/log
+mkdir -p $GOPATH/Data
 go get gopkg.in/mgo.v2
 go get github.com/djimenez/iconv-go
 git clone https://github.com/ZJGSU-Open-Source/GoOnlineJudge.git $GOPATH/src/GoOnlineJudge
