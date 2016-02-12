@@ -154,41 +154,22 @@ func (h *PKUJudger) SetDetail(pid string, html string) error {
 	return nil
 }
 
-func (h *PKUJudger) GetProblems() error {
-	vidsModel := &model.VIdsModel{}
-	StartId, err := vidsModel.GetLastID("PKU")
-	if err == model.DBErr {
-		return err
-	} else if StartId < 1000 {
-		StartId = 999
-	}
-	errCnt := 0
-	lastId := StartId
-	for i := 1; ; i++ {
-		pid := strconv.Itoa(StartId + i)
-		page, err := h.GetProblemPage(pid)
-		if err != nil { //offline
-			PKUlogger.Println("pid["+pid+"]: ", err, ".")
-			return err
-		}
-		if h.IsExist(page) {
-			err := h.SetDetail(pid, page)
-			if err != nil {
-				PKUlogger.Println("pid["+pid+"]: ", "import error.")
-			} else {
-				lastId = StartId + i
-				vidsModel.SetLastID("PKU", lastId)
-			}
-			errCnt = 0
-		} else {
-			PKUlogger.Println("pid["+pid+"]: ", "not exist.")
-			errCnt++
-		}
+func (h *PKUJudger) GetProblem(probId int) error {
+    pid := strconv.Itoa(probId)
+    page, err := h.GetProblemPage(pid)
+    if err != nil { //offline
+        PKUlogger.Println("pid["+pid+"]: ", err, ".")
+        return err
+    }
+    if h.IsExist(page) {
+        err := h.SetDetail(pid, page)
+        if err != nil {
+            PKUlogger.Println("pid["+pid+"]: ", "import error.")
+        }
+    } else {
+        PKUlogger.Println("pid["+pid+"]: ", "not exist.")
+    }
 
-		if errCnt >= 100 { //If "not exist" continuously repeat 100 times, terminate it.
-			break
-		}
-	}
-	PKUlogger.Println("import terminated. Last pid is ", lastId, ".")
+	PKUlogger.Println("add problem from PKU, pid is ", probId, ".")
 	return nil
 }

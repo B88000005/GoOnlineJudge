@@ -10,7 +10,7 @@ type RemoteOJInterface interface {
 	Init()
 	Host() string
 	Ping() error
-	GetProblems() error
+	GetProblem() error
 }
 
 var ROJs = []RemoteOJInterface{&PKUJudger{}}
