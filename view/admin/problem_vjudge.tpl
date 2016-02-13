@@ -4,8 +4,9 @@
     <div style="margin:0;padding:0;display:inline">
       <input name="utf8" type="hidden" value="✓">
     </div>
-    <select id="option" name="option" style="margin-left:10px">
-      <option value="0">PKU</option>
+    <select id="problem_vjudge" name="vjudge" style="margin-left:10px">
+      <option value="PKU">PKU</option>
+      <option value="CF">CF</option>
     </select>
     <div class="field">
       <label for="problem_pid">Problem Pid</label><br>

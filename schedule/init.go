@@ -17,6 +17,11 @@ var ROJs = []RemoteOJInterface{&PKUJudger{}}
 
 func init() {
 	go func() {
+		for _, oj := range ROJs {
+			oj.Init()
+		}
+	}()
+	go func() {
 		ojModel := &model.OJModel{}
 		status := &model.OJStatus{}
 		for {
