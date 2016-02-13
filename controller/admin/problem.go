@@ -149,7 +149,9 @@ func (pc *AdminProblem) VjudgeInsert() {
         restweb.Logger.Debug(err)
 	}
 	if vjname == "PKU" {
-        if err := ROJs[0].GetProblem(rpid); err !=nil {
+        var OJ = schedule.PKUJudger{}
+        OJ.init()
+        if err := OJ.GetProblem(rpid); err !=nil {
             restweb.Logger.Debug("No this problem")
             return
         }
