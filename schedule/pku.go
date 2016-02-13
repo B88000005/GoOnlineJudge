@@ -100,7 +100,7 @@ func (h *PKUJudger) SetDetail(pid string, html string) error {
 	pro := model.Problem{}
 	pro.RPid, _ = strconv.Atoi(pid)
 	pro.ROJ = "PKU"
-	pro.Status = StatusAvailable
+	pro.Status = StatusReverse
 
 	titleMatch := h.titleRx.FindStringSubmatch(html)
 	if len(titleMatch) < 1 {
