@@ -19,7 +19,7 @@ GoOnlineJudge is an ACM/ICPC online judge platform.
 ##Installation
 ###Prerequisites
 **Disclaimer**:
-GoOnlineJudge works best on GNU/Linux and has been tested on Ubuntu 14.04. Windows and Mac OS X are **not** recommended because [**RunServer**](https://github.com/ZJGSU-Open-Source/RunServer) cannot be built on both of them. 
+GoOnlineJudge works best on GNU/Linux and has been tested on Ubuntu 14.04. Windows and Mac OS X are **not** recommended because [**RunServer**](https://github.com/ZJGSU-Open-Source/RunServer) cannot be built on both of them.
 
 If you are Windows or Mac OS X user, you can try out [docker-oj](https://github.com/ZJGSU-Open-Source/docker-oj), based on docker image and works out of the box.
 
@@ -53,13 +53,13 @@ GoOnlineJudge is installed by running the following commands in your terminal. Y
 
 ####via wget
 ```bash
-wget https://raw.githubusercontent.com/ZJGSU-Open-Source/GoOnlineJudge/master/install.sh | sh
+wget https://raw.githubusercontent.com/B88000005/GoOnlineJudge/master/install.sh | sh
 ```
 
 ###Manual Installation
 ####Dependences
 + Go
-  + GoOnlineJudge is mainly written in Go. 
+  + GoOnlineJudge is mainly written in Go.
   + Get Go from [golang.org](http://golang.org)
 
 + MongoDB
@@ -90,7 +90,7 @@ wget https://raw.githubusercontent.com/ZJGSU-Open-Source/GoOnlineJudge/master/in
   + Get GCC from [GNU](https://gcc.gnu.org) or using following command if you are running Ubuntu
   ```bash
   sudo apt-get install build-essential
-  ``` 
+  ```
 
 + [OpenJDK](http://openjdk.java.net/)
   + OpenJDK is Oracle's implementation of the next version of the Java SE platform.
@@ -108,7 +108,7 @@ wget https://raw.githubusercontent.com/ZJGSU-Open-Source/GoOnlineJudge/master/in
 
 ####Install
 
-Obtain latest version via `git`, source codes will be in your $GOPATH/src. 
+Obtain latest version via `git`, source codes will be in your $GOPATH/src.
 ```bash
 git clone https://github.com/ZJGSU-Open-Source/GoOnlineJudge.git $GOPATH/src/GoOnlineJudge
 git clone https://github.com/ZJGSU-Open-Source/RunServer.git $GOPATH/src/RunServer
@@ -142,19 +142,19 @@ mkdir $OJ_HOME/log
 Make sure you have these directories in your $GOPATH/src:
 
 ```
-github.com/  
-GoOnlineJudge/  
-RunServer/  
-gopkg.in/  
-restweb/  
+github.com/
+GoOnlineJudge/
+RunServer/
+gopkg.in/
+restweb/
 ```
 
 And these directories in your $OJ_HOME:
 
 ```
-ProblemData/  
-run/  
-log/  
+ProblemData/
+run/
+log/
 ```
 
 Now, it's time for compilation.
