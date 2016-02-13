@@ -150,7 +150,7 @@ func (pc *AdminProblem) VjudgeInsert() {
 	}
 	if vjname == "PKU" {
         var OJ = schedule.PKUJudger{}
-        OJ.init()
+        OJ.Init()
         if err := OJ.GetProblem(rpid); err !=nil {
             restweb.Logger.Debug("No this problem")
             return
@@ -160,7 +160,7 @@ func (pc *AdminProblem) VjudgeInsert() {
         return
 	}
 
-	pc.Redirect("/problems/"+strconv.Itoa(pid), http.StatusFound)
+	pc.Redirect("/admin/problems/", http.StatusFound)
 }
 
 func createfile(path, filename string, context string) {
