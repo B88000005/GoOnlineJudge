@@ -4,7 +4,7 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
-	"GoOnlineJudge/schedule"
+//	"GoOnlineJudge/schedule"
 
 	"restweb"
 
