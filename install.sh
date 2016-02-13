@@ -39,9 +39,9 @@ mkdir -p $OJ_HOME/log
 mkdir -p $GOPATH/Data
 go get gopkg.in/mgo.v2
 go get github.com/djimenez/iconv-go
-git clone https://github.com/ZJGSU-Open-Source/GoOnlineJudge.git $GOPATH/src/GoOnlineJudge
-git clone https://github.com/ZJGSU-Open-Source/RunServer.git $GOPATH/src/RunServer
-git clone https://github.com/ZJGSU-Open-Source/vjudger.git $GOPATH/src/vjudger
+git clone https://github.com/B88000005/GoOnlineJudge.git $GOPATH/src/GoOnlineJudge
+git clone https://github.com/B88000005/RunServer.git $GOPATH/src/RunServer
+git clone https://github.com/B88000005/vjudger.git $GOPATH/src/vjudger
 git clone https://github.com/sakeven/restweb.git $GOPATH/src/restweb
 
 # Build OJ

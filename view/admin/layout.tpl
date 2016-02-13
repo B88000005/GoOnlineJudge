@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/static/favicon.ico" mce_href="/static/favicon.ico" type="image/x-icon">
     <title>{{.Title}}</title>
     <link href="/static/css/style.css" rel="stylesheet" type="text/css" />
-   
+
     <script src="/static/js/jquery.min.js" type="text/javascript"></script>
     <script src="/static/js/action.js" type="text/javascript"></script>
     {{if .IsEdit}}
@@ -26,7 +26,7 @@
             <a class="user_signout" href="#">[Sign Out]</a>
           {{end}}
         </div>
-        <hr> 
+        <hr>
         </div>
         <div id="navibar" class="span-3">
         <ul>
@@ -50,6 +50,7 @@
                 <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/problems">List</a>{{end}}</li>
                 {{if .IsAdmin}}
                 <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/problems/new">Add</a>{{end}}</li>
+                <li>{{if .IsVjudge}}<span>IsVjudge</sapn>{{else}}<a href="/admin/problems/vjudge">Vjudge</a>{{end}}</li>
                 <li>{{if .IsImport}}<span>Import</sapn>{{else}}<a href="/admin/problems/importor">Import</a>{{end}}</li>
                 {{end}}
                 {{if .RejudgePrivilege}}

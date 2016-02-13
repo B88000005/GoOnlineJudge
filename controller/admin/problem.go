@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+	"GoOnlineJudge/schedule"
 
 	"restweb"
 
@@ -124,6 +125,28 @@ func (pc *AdminProblem) Insert() {
 	createfile(config.Datapath+"/"+strconv.Itoa(pid), "sample.out", one.Out)
 
 	pc.Redirect("/problems/"+strconv.Itoa(pid), http.StatusFound)
+}
+
+//@URL: /admin/problems/vjudge/ @method: GET
+func (pc *AdminProblem) Vjudge() {
+	restweb.Logger.Debug("Admin Problem Add Virtual Judge")
+
+	pc.Output["Title"] = "Admin - Virtual Judge Problem Add"
+	pc.Output["IsProblem"] = true
+	pc.Output["IsVjudge"] = true
+	pc.Output["IsEdit"] = true
+
+	pc.RenderTemplate("view/admin/layout.tpl", "view/admin/problem_vjudge.tpl")
+}
+
+//@URL: /admin/problems/vjudge/ @method: POST
+func (pc *AdminProblem) VjudgeInsert() {
+	restweb.Logger.Debug("Admin Problem Insert Virtual Judge")
+	restweb.Logger.Debug("YAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+
+
+
+	pc.Redirect("/admin/problems", http.StatusFound)
 }
 
 func createfile(path, filename string, context string) {
