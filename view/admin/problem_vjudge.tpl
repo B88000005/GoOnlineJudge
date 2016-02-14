@@ -6,7 +6,7 @@
     </div>
     <select id="problem_vjudge" name="vjudge" style="margin-left:10px">
       <option value="PKU">PKU</option>
-      <option value="CF">CF</option>
+      <option value="VJ">VJ</option>
     </select>
     <div class="field">
       <label for="problem_pid">Problem Pid</label><br>
