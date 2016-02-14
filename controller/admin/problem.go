@@ -162,8 +162,7 @@ func (pc *AdminProblem) VjudgeInsert() {
             restweb.Logger.Debug("No this problem")
             return
         }
-	}
-	else {
+	}else {
         restweb.Logger.Debug("No this virtual judge")
         return
 	}
