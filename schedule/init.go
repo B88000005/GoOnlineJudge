@@ -13,7 +13,7 @@ type RemoteOJInterface interface {
 	GetProblem(int) error
 }
 
-var ROJs = []RemoteOJInterface{&PKUJudger{}}
+var ROJs = []RemoteOJInterface{&PKUJudger{},&VJJudger{}}
 
 func init() {
 	go func() {

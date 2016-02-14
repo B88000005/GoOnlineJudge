@@ -155,7 +155,15 @@ func (pc *AdminProblem) VjudgeInsert() {
             restweb.Logger.Debug("No this problem")
             return
         }
-	}else {
+	}else if vjname == "VJ" {
+        var OJ = schedule.VJJudger{}
+        OJ.Init()
+        if err := OJ.GetProblem(rpid); err !=nil {
+            restweb.Logger.Debug("No this problem")
+            return
+        }
+	}
+	else {
         restweb.Logger.Debug("No this virtual judge")
         return
 	}
