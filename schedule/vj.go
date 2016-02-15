@@ -111,7 +111,7 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		return ErrMatchFailed
 	}
 	pro.Time, _ = strconv.Atoi(resMatch[1])
-	pro.Memory, _ = 1024 * strconv.Atoi(resMatch[2])
+	pro.Memory, _ = strconv.Atoi(resMatch[2])
 
 	cxtMatch := h.ctxRx.FindAllStringSubmatch(html, 4)
 	if len(cxtMatch) < 3 {
