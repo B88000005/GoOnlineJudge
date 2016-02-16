@@ -130,32 +130,32 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 	}
 	pro.Memory, _ = strconv.Atoi(MemoryMatch[0])
 
-	DescriptionMatch := h.DescriptionRx.FindAllStringSubmatch(html)
+	DescriptionMatch := h.DescriptionRx.FindStringSubmatch(html)
 	if len(DescriptionMatch) != 1 {
 		log.Println(DescriptionMatch)
 		return ErrMatchFailed
 	}
 	pro.Description = template.HTML(h.ReplaceImg(DescriptionMatch[0]))
-	InputMatch := h.InputRx.FindAllStringSubmatch(html)
+	InputMatch := h.InputRx.FindStringSubmatch(html)
 	if len(InputMatch) != 1 {
 		log.Println(InputMatch)
 		return ErrMatchFailed
 	}
 	pro.Input = template.HTML(h.ReplaceImg(InputMatch[0]))
-	OutputMatch := h.OutputRx.FindAllStringSubmatch(html)
+	OutputMatch := h.OutputRx.FindStringSubmatch(html)
 	if len(OutputMatch) != 1 {
 		log.Println(OutputMatch)
 		return ErrMatchFailed
 	}
-	pro.Output = template.HTML(h.ReplaceImg(Output[0]))
+	pro.Output = template.HTML(h.ReplaceImg(OutputMatch[0]))
 
-	testIn := h.testInRx.FindAllStringSubmatch(html)
+	testIn := h.testInRx.FindStringSubmatch(html)
 	if len(testIn) != 1 {
 		log.Println(testIn)
 		return ErrMatchFailed
 	}
 	pro.In = testIn[0]
-	testOut := h.testOutRx.FindAllStringSubmatch(html)
+	testOut := h.testOutRx.FindStringSubmatch(html)
 	if len(testOut) != 1 {
 		log.Println(testOut)
 		return ErrMatchFailed
@@ -167,7 +167,7 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		pro.Source = src[0]
 	}
 
-	hint := h.hintRx.FindAllStringSubmatch(html)
+	hint := h.hintRx.FindStringSubmatch(html)
 	if len(hint) != 1 {
 		log.Println(hint)
 		return ErrMatchFailed
