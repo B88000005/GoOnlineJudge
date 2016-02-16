@@ -30,7 +30,7 @@ func (p *VJJudger) Host() string {
 }
 func (p *VJJudger) Ping() error {
 	p.client = &http.Client{Timeout: time.Second * 10}
-	resp, err := p.client.Get("http://codeforces.com/problemset/problem/1/A")
+	resp, err := p.client.Get("http://acm.hust.edu.cn/vjudge/problem/viewProblem.action?id=19972")
 	if err != nil {
 		return ErrConnectFailed
 	}
@@ -43,24 +43,31 @@ func (p *VJJudger) Ping() error {
 func (h *VJJudger) Init() {
 	h.client = &http.Client{Timeout: time.Second * 10}
 
-	titlePat := `<a href="/vjudge/problem/visitOriginUrl.action?id=.*?" target="_blank">(.*?)</a>`
+	titlePat := `<td>Title:</td><td>(.*?)</td>`
+    h.titleRx = regexp.MustCompile(titlePat)
 
-	h.titleRx = regexp.MustCompile(titlePat)
+	TimePat := `<td>Time Limit:</td><td>(\d+) MS</td>`
+	h.TimeRx = regexp.MustCompile(TimePat)
+	MemoryPat := `<td>Memory Limit:</td><td>(\d+) KB</td>`
+	h.MemoryRx = regexp.MustCompile(MemoryPat)
 
-	resLimtPat := `<td><b>Time Limit:</b> (\d+)MS</td><td width="10px"></td><td><b>Memory Limit:</b> (\d+)KB</td>`
-	h.resLimtRx = regexp.MustCompile(resLimtPat)
+	DescriptionPat := `<textarea name="description.description" cols="120" rows="15" id="description">(.*?)</textarea>`
+	h.DescriptionRx = regexp.MustCompile(DescriptionPat)
+	InputPat := `<textarea name="description.input" cols="120" rows="15" id="input">(.*?)</textarea>`
+	h.InputRx = regexp.MustCompile(InputPat)
+	OutputPat := `<textarea name="description.output" cols="120" rows="15" id="output">(.*?)</textarea>`
+	h.OutputRx = regexp.MustCompile(OutputPat)
 
-	ctxPat := `(?s)<div class="textBG"><p>(.*?)</p></div>`
-	h.ctxRx = regexp.MustCompile(ctxPat)
+	testInPat := `<textarea name="description.sampleInput" cols="120" rows="15" id="sampleInput">(.*?)</textarea>`
+	h.testInRx = regexp.MustCompile(testInPat)
+	testOutPat := `<textarea name="description.sampleOutput" cols="120" rows="15" id="sampleOutput">(.*?)</textarea>`
+	h.testOutRx = regexp.MustCompile(testOutPat)
 
-	testPat := `(?s)put</p><div class="textBG">(.*?)</div></div>`
-	h.testRx = regexp.MustCompile(testPat)
-
-	srcPat := `<a style="color: black" href="http://codeforces.com/contest/.*?">(.*?)</a>`
+	srcPat := `<td>Source:</td><td>(.*?)</td>`
 	h.srcRx = regexp.MustCompile(srcPat)
 
-//	hintPat := `(?s)<p class="pst">Hint</p><div class="ptx" lang=".*?">(.*?)</div>`
-//	h.hintRx = regexp.MustCompile(hintPat)
+	hintPat := `<textarea name="description.hint" cols="120" rows="15" id="hint">(.*?)</textarea>`
+	h.hintRx = regexp.MustCompile(hintPat)
 
 	VJLogfile, err := os.Create("log/vj.log")
 	if err != nil {
@@ -71,7 +78,7 @@ func (h *VJJudger) Init() {
 }
 
 func (h *VJJudger) GetProblemPage(pid string) (string, error) {
-	resp, err := h.client.Get("http://acm.hust.edu.cn/vjudge/problem/viewProblem.action?id=" + pid)
+	resp, err := h.client.Get("http://acm.hust.edu.cn/vjudge/problem/toEditDescription.action?id=" + pid)
 	if err != nil {
 		return "", ErrConnectFailed
 	}
@@ -95,49 +102,73 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 	pro.Status = StatusReverse
 
 	titleMatch := h.titleRx.FindStringSubmatch(html)
-	if len(titleMatch) < 1 {
+	if len(titleMatch) != 1 {
 		log.Println(titleMatch)
 		return ErrMatchFailed
 	}
-	pro.Title = titleMatch[1]
+	pro.Title = titleMatch[0]
 
-	if strings.Index(html, "Special Judge") >= 0 {
-		pro.Special = 1
-	}
+//	if strings.Index(html, "Special Judge") >= 0 {
+//		pro.Special = 1
+//	}
 
-	resMatch := h.resLimtRx.FindStringSubmatch(html)
-	if len(resMatch) < 3 {
-		log.Println(resMatch)
+	TimeMatch := h.TimeRx.FindStringSubmatch(html)
+	if len(TimeMatch) != 1 {
+		log.Println(TimeMatch)
 		return ErrMatchFailed
 	}
-	pro.Time, _ = strconv.Atoi(resMatch[1])
-	pro.Memory, _ = strconv.Atoi(resMatch[2])
+	pro.Time, _ = strconv.Atoi(TimeMatch[0])
 
-	cxtMatch := h.ctxRx.FindAllStringSubmatch(html, 4)
-	if len(cxtMatch) < 3 {
-		log.Println("ctx match error, VJ pid is", pid)
+	MemoryMatch := h.MemoryRx.FindStringSubmatch(html)
+	if len(MemoryMatch) != 1 {
+		log.Println(MemoryMatch)
 		return ErrMatchFailed
 	}
-	pro.Description = template.HTML(h.ReplaceImg(cxtMatch[0][1]))
-	pro.Input = template.HTML(h.ReplaceImg(cxtMatch[1][1]))
-	pro.Output = template.HTML(h.ReplaceImg(cxtMatch[2][1]))
+	pro.Memory, _ = strconv.Atoi(MemoryMatch[0])
 
-	test := h.testRx.FindAllStringSubmatch(html, 2)
-	if len(test) < 2 {
-		log.Println("test data error, VJ pid is", pid)
+	DescriptionMatch := h.DescriptionRx.FindAllStringSubmatch(html)
+	if len(DescriptionMatch) != 1 {
+		log.Println(DescriptionMatch)
 		return ErrMatchFailed
 	}
-	pro.In = test[0][1]
-	pro.Out = test[1][1]
+	pro.Description = template.HTML(h.ReplaceImg(DescriptionMatch[0]))
+	InputMatch := h.InputRx.FindAllStringSubmatch(html)
+	if len(InputMatch) != 1 {
+		log.Println(InputMatch)
+		return ErrMatchFailed
+	}
+	pro.Input = template.HTML(h.ReplaceImg(InputMatch[0]))
+	OutputMatch := h.OutputRx.FindAllStringSubmatch(html)
+	if len(OutputMatch) != 1 {
+		log.Println(OutputMatch)
+		return ErrMatchFailed
+	}
+	pro.Output = template.HTML(h.ReplaceImg(Output[0]))
+
+	testIn := h.testInRx.FindAllStringSubmatch(html)
+	if len(testIn) != 1 {
+		log.Println(testIn)
+		return ErrMatchFailed
+	}
+	pro.In = testIn[0]
+	testOut := h.testOutRx.FindAllStringSubmatch(html)
+	if len(testOut) != 1 {
+		log.Println(testOut)
+		return ErrMatchFailed
+	}
+	pro.Out = testOut[0]
 
 	src := h.srcRx.FindStringSubmatch(html)
-	if len(src) > 1 {
-		pro.Source = src[1]
+	if len(src) >= 1 {
+		pro.Source = src[0]
 	}
 
-	if len(cxtMatch) >= 4 {
-		pro.Hint = template.HTML(cxtMatch[3][1])
+	hint := h.hintRx.FindAllStringSubmatch(html)
+	if len(hint) != 1 {
+		log.Println(hint)
+		return ErrMatchFailed
 	}
+	pro.Hint = hint[0]
 
 	proModel := &model.ProblemModel{}
 	proModel.Insert(pro)
