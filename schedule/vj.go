@@ -15,12 +15,16 @@ import (
 
 type VJJudger struct {
 	client    *http.Client
-	testRx    *regexp.Regexp
 	titleRx   *regexp.Regexp
-	resLimtRx *regexp.Regexp
-	ctxRx     *regexp.Regexp
-	srcRx     *regexp.Regexp
-	hintRx    *regexp.Regexp
+	TimeRx   *regexp.Regexp
+	MemoryRx   *regexp.Regexp
+	DescriptionRx   *regexp.Regexp
+	InputRx   *regexp.Regexp
+	OutputRx   *regexp.Regexp
+	testInRx   *regexp.Regexp
+	testOutRx   *regexp.Regexp
+	srcRx   *regexp.Regexp
+	hintRx   *regexp.Regexp
 }
 
 var VJlogger *log.Logger
