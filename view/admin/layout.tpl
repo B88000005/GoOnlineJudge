@@ -50,7 +50,7 @@
                 <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/problems">List</a>{{end}}</li>
                 {{if .IsAdmin}}
                 <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/problems/new">Add</a>{{end}}</li>
-                <li>{{if .IsVjudge}}<span>IsVjudge</sapn>{{else}}<a href="/admin/problems/vjudge">Vjudge</a>{{end}}</li>
+                <li>{{if .IsVjudge}}<span>Vjudge</sapn>{{else}}<a href="/admin/problems/vjudge">Vjudge</a>{{end}}</li>
                 <li>{{if .IsImport}}<span>Import</sapn>{{else}}<a href="/admin/problems/importor">Import</a>{{end}}</li>
                 {{end}}
                 {{if .RejudgePrivilege}}
