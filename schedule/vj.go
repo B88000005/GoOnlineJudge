@@ -201,7 +201,7 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		log.Println(OutputMatch)
 		return ErrMatchFailed
 	}
-	pro.Output = template.HTML(h.ReplaceHtml(OutputMatch[1]))
+	pro.Output = template.HTML(h.ReplaceHtml(OutputMatch[1]+"\n"+testIn[1]+"\n"+testOut[1]))
 
 	testIn := h.testInRx.FindStringSubmatch(html)
 	if len(testIn) != 2 {
@@ -226,7 +226,7 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		log.Println(hint)
 		return ErrMatchFailed
 	}
-	pro.Hint = template.HTML(h.ReplaceHtml(testIn[1]+"\n"+testOut[1]+"\n"+hint[1]))
+	pro.Hint = template.HTML(h.ReplaceHtml(hint[1]))
 
 	proModel := &model.ProblemModel{}
 	proModel.Insert(pro)
