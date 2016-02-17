@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"vjudger"
 )
 
 type VJJudger struct {
@@ -82,6 +83,11 @@ func (h *VJJudger) Init() {
 }
 
 func (h *VJJudger) GetProblemPage(pid string) (string, error) {
+    var OJ = VJJudger{}
+    err := OJ.login()
+    if err != nil {
+		return "", ErrConnectFailed
+    }
 	resp, err := h.client.Get("http://acm.hust.edu.cn/vjudge/problem/toEditDescription.action?id=" + pid)
 	if err != nil {
 		return "", ErrConnectFailed
@@ -172,7 +178,7 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		log.Println(hint)
 		return ErrMatchFailed
 	}
-	pro.Hint = hint[0]
+	pro.Hint = template.HTML(hint[0])
 
 	proModel := &model.ProblemModel{}
 	proModel.Insert(pro)
