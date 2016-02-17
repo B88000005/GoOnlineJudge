@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"vjudger"
+    "net/url"
 )
 
 type VJJudger struct {
@@ -83,11 +83,16 @@ func (h *VJJudger) Init() {
 }
 
 func (h *VJJudger) GetProblemPage(pid string) (string, error) {
-    var OJ = VJJudger{}
-    err := OJ.login()
+    uv := url.Values{}
+    uv.Add("username", "vsake")
+    uv.Add("password", "JC945312")
+
+    req, err := http.NewRequest("POST", "http://acm.hust.edu.cn/vjudge/user/login.action", strings.NewReader(uv.Encode()))
     if err != nil {
-		return "", ErrConnectFailed
+        return "", BadInternet
     }
+
+
 	resp, err := h.client.Get("http://acm.hust.edu.cn/vjudge/problem/toEditDescription.action?id=" + pid)
 	if err != nil {
 		return "", ErrConnectFailed
