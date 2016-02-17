@@ -32,10 +32,14 @@
     <p>{{.Input}}</p>
     <div class="problemIteam">Output:</div>
     <p>{{.Output}}</p>
-    <div class="problemIteam">Sample Input:</div>
-    <pre class="sample">{{.In}}</pre>
-    <div class="problemIteam">Sample Output:</div>
-    <pre class="sample">{{.Out}}</pre>
+    {{if .In}}
+      <div class="problemIteam">Sample Input:</div>
+      <pre class="sample">{{.In}}</pre>
+    {{end}}
+    {{if .Out}}
+      <div class="problemIteam">Sample Output:</div>
+      <pre class="sample">{{.Out}}</pre>
+    {{end}}
     {{if .Hint}}
       <div class="problemIteam">Hint:</div>
       <p>{{.Hint}}</p>
@@ -68,7 +72,7 @@
       <div class="rfloat">
         <input checked="checked" id="advanced_editor" name="advanced_editor" onchange="toggle_editor()" onclick="toggle_editor()" type="checkbox" value="1" />
         Use advanced editor
-    </div>     
+    </div>
      <label for="code">Code</label>
       <textarea id="code" name="code" autofocus=""></textarea>
     </div>
@@ -85,7 +89,7 @@
     $('#submission_link').hide();
     editor = CodeMirror.fromTextArea(document.getElementById("code"), {
       lineNumbers: true,
-    }); 
+    });
     $('#code').blur(function(){editor.setValue($('#code').val());});
     $('#compiler_id').change(set_mode);
     set_mode();
@@ -131,7 +135,7 @@
   }
   function set_mode() {
     var compiler=$('#compiler_id option:selected').text();
-    var modes=[ 
+    var modes=[
     'Javascript', 'Haskell', 'Lua', 'Pascal', 'Python', 'Ruby', 'Scheme', 'Smalltalk', 'Clojure',
     ['PHP', 'text/x-php'],
     ['C', 'text/x-csrc'],
