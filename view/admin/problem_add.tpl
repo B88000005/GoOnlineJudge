@@ -37,16 +37,16 @@
       <input id="problem_output" name="output" type="text">
     </div>
     <div class="field">
-      <label for="problem_hint">Hint</label><br>
-      <input id="problem_hint" name="hint" type="text">
-    </div>
-    <div class="field">
       <label for="problem_in">Sample Input</label><br>
       <textarea id="problem_in" name="in" style="width:640px;height:200px;"></textarea>
     </div>
     <div class="field">
       <label for="problem_out">Sample Output</label><br>
       <textarea id="problem_out" name="out" style="width:640px;height:200px;"></textarea>
+    </div>
+    <div class="field">
+      <label for="problem_hint">Hint</label><br>
+      <input id="problem_hint" name="hint" type="text">
     </div>
     <div class="actions">
       <input name="commit" type="submit" value="Submit">
@@ -57,13 +57,13 @@ var options = {
 	height: '250px',
 	langType : 'en',
 	items: [
-        'source', '|', 'undo', 'redo', '|', 
-        'preview', 'code', 'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|', 
-        'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 
-        'insertorderedlist', 'insertunorderedlist', 'subscript', 'superscript', 
-        'clearhtml', '|', 'fullscreen', '/', 'formatblock', 'fontname', 'fontsize', '|', 
-        'forecolor', 'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough', 
-        'removeformat', '|', 'image', 'table', 'hr', 
+        'source', '|', 'undo', 'redo', '|',
+        'preview', 'code', 'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|',
+        'justifyleft', 'justifycenter', 'justifyright', 'justifyfull',
+        'insertorderedlist', 'insertunorderedlist', 'subscript', 'superscript',
+        'clearhtml', '|', 'fullscreen', '/', 'formatblock', 'fontname', 'fontsize', '|',
+        'forecolor', 'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough',
+        'removeformat', '|', 'image', 'table', 'hr',
         'emoticons', 'baidumap', 'link', 'unlink', '|', 'about'
 	]
 }
