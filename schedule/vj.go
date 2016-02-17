@@ -105,7 +105,8 @@ func (h *VJJudger) GetProblemPage(pid string) (string, error) {
 	fmt.Println("FFF: ",html)
 
 
-	resp, err = h.client.Get("http://acm.hust.edu.cn/vjudge/problem/toEditDescription.action?id=" + pid)
+	resp, err = h.client.Get("http://acm.hust.edu.cn/vjudge/user/checkLogInStatus.action")
+	//resp, err = h.client.Get("http://acm.hust.edu.cn/vjudge/problem/toEditDescription.action?id=" + pid)
 	if err != nil {
 		return "", ErrConnectFailed
 	}
