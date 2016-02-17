@@ -151,6 +151,7 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		return ErrMatchFailed
 	}
 	pro.Title = titleMatch[1]
+	fmt.Println("Title: ",pro.Title)
 
 //	if strings.Index(html, "Special Judge") >= 0 {
 //		pro.Special = 1
@@ -162,6 +163,7 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		return ErrMatchFailed
 	}
 	pro.Time, _ = strconv.Atoi(TimeMatch[1])
+	fmt.Println("Time: ",pro.Time)
 
 	MemoryMatch := h.MemoryRx.FindStringSubmatch(html)
 	if len(MemoryMatch) != 2 {
@@ -169,6 +171,7 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		return ErrMatchFailed
 	}
 	pro.Memory, _ = strconv.Atoi(MemoryMatch[1])
+	fmt.Println("Memory: ",pro.Memory)
 
 	DescriptionMatch := h.DescriptionRx.FindStringSubmatch(html)
 	if len(DescriptionMatch) != 2 {
@@ -176,18 +179,21 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		return ErrMatchFailed
 	}
 	pro.Description = template.HTML(h.ReplaceImg(DescriptionMatch[1]))
+	fmt.Println("Description: ",pro.Description)
 	InputMatch := h.InputRx.FindStringSubmatch(html)
 	if len(InputMatch) != 2 {
 		log.Println(InputMatch)
 		return ErrMatchFailed
 	}
 	pro.Input = template.HTML(h.ReplaceImg(InputMatch[1]))
+	fmt.Println("Input: ",pro.Input)
 	OutputMatch := h.OutputRx.FindStringSubmatch(html)
 	if len(OutputMatch) != 2 {
 		log.Println(OutputMatch)
 		return ErrMatchFailed
 	}
 	pro.Output = template.HTML(h.ReplaceImg(OutputMatch[1]))
+	fmt.Println("Output: ",pro.Output)
 
 	testIn := h.testInRx.FindStringSubmatch(html)
 	if len(testIn) != 2 {
@@ -195,16 +201,19 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		return ErrMatchFailed
 	}
 	pro.In = testIn[1]
+	fmt.Println("In: ",pro.In)
 	testOut := h.testOutRx.FindStringSubmatch(html)
 	if len(testOut) != 2 {
 		log.Println(testOut)
 		return ErrMatchFailed
 	}
 	pro.Out = testOut[1]
+	fmt.Println("Out: ",pro.Out)
 
 	src := h.srcRx.FindStringSubmatch(html)
 	if len(src) >= 2 {
 		pro.Source = src[1]
+        fmt.Println("Source: ",pro.Source)
 	}
 
 	hint := h.hintRx.FindStringSubmatch(html)
@@ -213,6 +222,7 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		return ErrMatchFailed
 	}
 	pro.Hint = template.HTML(hint[1])
+	fmt.Println("Out: ",pro.Hint)
 
 	proModel := &model.ProblemModel{}
 	proModel.Insert(pro)
