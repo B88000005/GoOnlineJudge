@@ -120,8 +120,8 @@ func (h *VJJudger) GetProblemPage(pid string) (string, error) {
 	fmt.Println("FFF: ",html)
 
 
-	resp, err = h.client.Get("http://acm.hust.edu.cn/vjudge/user/checkLogInStatus.action")
-	//resp, err = h.client.Get("http://acm.hust.edu.cn/vjudge/problem/toEditDescription.action?id=" + pid)
+	//resp, err = h.client.Get("http://acm.hust.edu.cn/vjudge/user/checkLogInStatus.action")
+	resp, err = h.client.Get("http://acm.hust.edu.cn/vjudge/problem/toEditDescription.action?id=" + pid)
 	if err != nil {
 		return "", ErrConnectFailed
 	}
@@ -178,21 +178,21 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		log.Println(DescriptionMatch)
 		return ErrMatchFailed
 	}
-	pro.Description = template.HTML(h.ReplaceImg(DescriptionMatch[1]))
+	pro.Description = template.HTML(html.UnescapeString(DescriptionMatch[1]))
 	fmt.Println("Description: ",pro.Description)
 	InputMatch := h.InputRx.FindStringSubmatch(html)
 	if len(InputMatch) != 2 {
 		log.Println(InputMatch)
 		return ErrMatchFailed
 	}
-	pro.Input = template.HTML(h.ReplaceImg(InputMatch[1]))
+	pro.Input = template.HTML(html.UnescapeString(InputMatch[1]))
 	fmt.Println("Input: ",pro.Input)
 	OutputMatch := h.OutputRx.FindStringSubmatch(html)
 	if len(OutputMatch) != 2 {
 		log.Println(OutputMatch)
 		return ErrMatchFailed
 	}
-	pro.Output = template.HTML(h.ReplaceImg(OutputMatch[1]))
+	pro.Output = template.HTML(html.UnescapeString(OutputMatch[1]))
 	fmt.Println("Output: ",pro.Output)
 
 	testIn := h.testInRx.FindStringSubmatch(html)
@@ -221,7 +221,7 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		log.Println(hint)
 		return ErrMatchFailed
 	}
-	pro.Hint = template.HTML(hint[1])
+	pro.Hint = template.HTML(html.UnescapeString(hint[1]))
 	fmt.Println("Out: ",pro.Hint)
 
 	proModel := &model.ProblemModel{}
