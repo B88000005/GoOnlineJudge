@@ -120,7 +120,21 @@ func (h *VJJudger) GetProblemPage(pid string) (string, error) {
 
 
 	//resp, err = h.client.Get("http://acm.hust.edu.cn/vjudge/user/checkLogInStatus.action")
-	resp, err = h.client.Get("http://acm.hust.edu.cn/vjudge/problem/toEditDescription.action?id=" + pid)
+
+	resp, err = h.client.Get("http://acm.hust.edu.cn/vjudge/problem/viewProblem.action?id=" + pid)
+	if err != nil {
+		return "", ErrConnectFailed
+	}
+	b, _ = ioutil.ReadAll(resp.Body)
+	html = string(b)
+	eidMatch := regexp.MustCompile(`/vjudge/problem/toEditDescription.action?id=(.*?)`).FindStringSubmatch(html)
+	if len(eidMatch) != 2 {
+		log.Println(eidMatch)
+		return "", ErrConnectFailed
+	}
+	eid := eidMatch[1]
+
+	resp, err = h.client.Get("http://acm.hust.edu.cn/vjudge/problem/toEditDescription.action?id=" + eid)
 	if err != nil {
 		return "", ErrConnectFailed
 	}
