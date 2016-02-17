@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-    "net/http/cookiejar"
+    "sync"
     "net/url"
 	"os"
 	"regexp"
@@ -50,12 +50,12 @@ func (p *VJJudger) Ping() error {
 func (h *VJJudger) Init() {
 	h.client = &http.Client{Timeout: time.Second * 10}
 
-	titlePat := `<td>Title:</td><td>(.*?)</td>`
+	titlePat := `<td>Title:</td>\s*<td>(.*?)</td>`
     h.titleRx = regexp.MustCompile(titlePat)
 
-	TimePat := `<td>Time Limit:</td><td>(\d+) MS</td>`
+	TimePat := `<td>Time Limit:</td>\s*<td>(\d+) MS</td>`
 	h.TimeRx = regexp.MustCompile(TimePat)
-	MemoryPat := `<td>Memory Limit:</td><td>(\d+) KB</td>`
+	MemoryPat := `<td>Memory Limit:</td>\s*<td>(\d+) KB</td>`
 	h.MemoryRx = regexp.MustCompile(MemoryPat)
 
 	DescriptionPat := `<textarea name="description.description" cols="120" rows="15" id="description">(.*?)</textarea>`
@@ -108,7 +108,7 @@ func (jar *Jar) Cookies(u *url.URL) []*http.Cookie {
 
 func (h *VJJudger) GetProblemPage(pid string) (string, error) {
     jar := NewJar()
-    h.client = &http.Client{nil, nil, jar}
+    h.client = &http.Client{Jar: jar}
     resp, err := h.client.PostForm("http://acm.hust.edu.cn/vjudge/user/login.action", url.Values{
         "username": {"vsake"},
         "password": {"JC945312"},
@@ -146,73 +146,73 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 	pro.Status = StatusReverse
 
 	titleMatch := h.titleRx.FindStringSubmatch(html)
-	if len(titleMatch) != 1 {
+	if len(titleMatch) != 2 {
 		log.Println(titleMatch)
 		return ErrMatchFailed
 	}
-	pro.Title = titleMatch[0]
+	pro.Title = titleMatch[1]
 
 //	if strings.Index(html, "Special Judge") >= 0 {
 //		pro.Special = 1
 //	}
 
 	TimeMatch := h.TimeRx.FindStringSubmatch(html)
-	if len(TimeMatch) != 1 {
+	if len(TimeMatch) != 2 {
 		log.Println(TimeMatch)
 		return ErrMatchFailed
 	}
-	pro.Time, _ = strconv.Atoi(TimeMatch[0])
+	pro.Time, _ = strconv.Atoi(TimeMatch[1])
 
 	MemoryMatch := h.MemoryRx.FindStringSubmatch(html)
-	if len(MemoryMatch) != 1 {
+	if len(MemoryMatch) != 2 {
 		log.Println(MemoryMatch)
 		return ErrMatchFailed
 	}
-	pro.Memory, _ = strconv.Atoi(MemoryMatch[0])
+	pro.Memory, _ = strconv.Atoi(MemoryMatch[1])
 
 	DescriptionMatch := h.DescriptionRx.FindStringSubmatch(html)
-	if len(DescriptionMatch) != 1 {
+	if len(DescriptionMatch) != 2 {
 		log.Println(DescriptionMatch)
 		return ErrMatchFailed
 	}
-	pro.Description = template.HTML(h.ReplaceImg(DescriptionMatch[0]))
+	pro.Description = template.HTML(h.ReplaceImg(DescriptionMatch[1]))
 	InputMatch := h.InputRx.FindStringSubmatch(html)
-	if len(InputMatch) != 1 {
+	if len(InputMatch) != 2 {
 		log.Println(InputMatch)
 		return ErrMatchFailed
 	}
-	pro.Input = template.HTML(h.ReplaceImg(InputMatch[0]))
+	pro.Input = template.HTML(h.ReplaceImg(InputMatch[1]))
 	OutputMatch := h.OutputRx.FindStringSubmatch(html)
-	if len(OutputMatch) != 1 {
+	if len(OutputMatch) != 2 {
 		log.Println(OutputMatch)
 		return ErrMatchFailed
 	}
-	pro.Output = template.HTML(h.ReplaceImg(OutputMatch[0]))
+	pro.Output = template.HTML(h.ReplaceImg(OutputMatch[1]))
 
 	testIn := h.testInRx.FindStringSubmatch(html)
-	if len(testIn) != 1 {
+	if len(testIn) != 2 {
 		log.Println(testIn)
 		return ErrMatchFailed
 	}
-	pro.In = testIn[0]
+	pro.In = testIn[1]
 	testOut := h.testOutRx.FindStringSubmatch(html)
-	if len(testOut) != 1 {
+	if len(testOut) != 2 {
 		log.Println(testOut)
 		return ErrMatchFailed
 	}
-	pro.Out = testOut[0]
+	pro.Out = testOut[1]
 
 	src := h.srcRx.FindStringSubmatch(html)
-	if len(src) >= 1 {
-		pro.Source = src[0]
+	if len(src) >= 2 {
+		pro.Source = src[1]
 	}
 
 	hint := h.hintRx.FindStringSubmatch(html)
-	if len(hint) != 1 {
+	if len(hint) != 2 {
 		log.Println(hint)
 		return ErrMatchFailed
 	}
-	pro.Hint = template.HTML(hint[0])
+	pro.Hint = template.HTML(hint[1])
 
 	proModel := &model.ProblemModel{}
 	proModel.Insert(pro)
