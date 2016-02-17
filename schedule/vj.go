@@ -127,7 +127,7 @@ func (h *VJJudger) GetProblemPage(pid string) (string, error) {
 	}
 	b, _ = ioutil.ReadAll(resp.Body)
 	html = string(b)
-	eidPat := `<a style="padding-right:10px;float:right" href="/vjudge/problem/toEditDescription.action?id=(.*?)" class="login">`
+	eidPat := `"/vjudge/problem/toEditDescription.action.id=(.*?)"`
 	eidRx := regexp.MustCompile(eidPat)
 	eidMatch := eidRx.FindStringSubmatch(html)
 	if len(eidMatch) != 2 {
