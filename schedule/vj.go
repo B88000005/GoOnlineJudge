@@ -6,12 +6,13 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+    "net/http/cookiejar"
+    "net/url"
 	"os"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
-    "net/url"
     "fmt"
 )
 
@@ -83,22 +84,36 @@ func (h *VJJudger) Init() {
 	VJlogger = log.New(VJLogfile, "[VJ]", log.Ldate|log.Ltime)
 }
 
+////////////////////////////////
+
+type Jar struct {
+    lk      sync.Mutex
+    cookies map[string][]*http.Cookie
+}
+func NewJar() *Jar {
+    jar := new(Jar)
+    jar.cookies = make(map[string][]*http.Cookie)
+    return jar
+}
+func (jar *Jar) SetCookies(u *url.URL, cookies []*http.Cookie) {
+    jar.lk.Lock()
+    jar.cookies[u.Host] = cookies
+    jar.lk.Unlock()
+}
+func (jar *Jar) Cookies(u *url.URL) []*http.Cookie {
+    return jar.cookies[u.Host]
+}
+
+////////////////////////////////
+
 func (h *VJJudger) GetProblemPage(pid string) (string, error) {
-    uv := url.Values{}
-    uv.Add("username", "vsake")
-    uv.Add("password", "JC945312")
-
-    req, err := http.NewRequest("POST", "http://acm.hust.edu.cn/vjudge/user/login.action", strings.NewReader(uv.Encode()))
-    if err != nil {
-        return "", ErrConnectFailed
-    }
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	resp, err := h.client.Do(req)
-	if err != nil {
-        return "", ErrConnectFailed
-	}
-	defer resp.Body.Close()
+    jar := NewJar()
+    h.client = &http.Client{nil, nil, jar}
+    resp, err := h.client.PostForm("http://acm.hust.edu.cn/vjudge/user/login.action", url.Values{
+        "username": {"vsake"},
+        "password": {"JC945312"},
+    })
+	resp.Body.Close()
 
 	b, _ := ioutil.ReadAll(resp.Body)
 	html := string(b)
