@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
     "net/url"
+    "fmt"
 )
 
 type VJJudger struct {
@@ -89,8 +90,19 @@ func (h *VJJudger) GetProblemPage(pid string) (string, error) {
 
     req, err := http.NewRequest("POST", "http://acm.hust.edu.cn/vjudge/user/login.action", strings.NewReader(uv.Encode()))
     if err != nil {
-        return "", BadInternet
+        return "", ErrConnectFailed
     }
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, err := h.client.Do(req)
+	if err != nil {
+        return "", ErrConnectFailed
+	}
+	defer resp.Body.Close()
+
+	b, _ := ioutil.ReadAll(resp.Body)
+	html := string(b)
+	fmt.Println("FFF: ",html)
 
 
 	resp, err := h.client.Get("http://acm.hust.edu.cn/vjudge/problem/toEditDescription.action?id=" + pid)
@@ -99,6 +111,7 @@ func (h *VJJudger) GetProblemPage(pid string) (string, error) {
 	}
 	b, _ := ioutil.ReadAll(resp.Body)
 	html := string(b)
+	fmt.Println("SSS: ",html)
 	return html, nil
 
 }
