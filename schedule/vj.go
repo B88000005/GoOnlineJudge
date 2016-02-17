@@ -127,7 +127,9 @@ func (h *VJJudger) GetProblemPage(pid string) (string, error) {
 	}
 	b, _ = ioutil.ReadAll(resp.Body)
 	html = string(b)
-	eidMatch := regexp.MustCompile(`/vjudge/problem/toEditDescription.action?id=(.*?)`).FindStringSubmatch(html)
+	eidPat := `<a style="padding-right:10px;float:right" href="/vjudge/problem/toEditDescription.action?id=(.*?)" class="login">`
+	eidRx := regexp.MustCompile(eidPat)
+	eidMatch := eidRx.FindStringSubmatch(html)
 	if len(eidMatch) != 2 {
 		log.Println(eidMatch)
 		return "", ErrConnectFailed
