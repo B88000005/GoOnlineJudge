@@ -134,8 +134,8 @@ func (h *VJJudger) GetProblemPage(pid string) (string, error) {
 func (h *VJJudger) IsExist(page string) bool {
 	return strings.Index(page, "Can not find problem") < 0
 }
-func (h *VJJudger) ReplaceImg(text string) string {
-	return text
+func (h *VJJudger) ReplaceHtml(text string) string {
+	return html.UnescapeString(text)
 }
 
 func (h *VJJudger) SetDetail(pid string, html string) error {
@@ -178,21 +178,21 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		log.Println(DescriptionMatch)
 		return ErrMatchFailed
 	}
-	pro.Description = template.HTML(html.UnescapeString(DescriptionMatch[1]))
+	pro.Description = template.HTML(h.ReplaceHtml(DescriptionMatch[1]))
 	fmt.Println("Description: ",pro.Description)
 	InputMatch := h.InputRx.FindStringSubmatch(html)
 	if len(InputMatch) != 2 {
 		log.Println(InputMatch)
 		return ErrMatchFailed
 	}
-	pro.Input = template.HTML(html.UnescapeString(InputMatch[1]))
+	pro.Input = template.HTML(h.ReplaceHtml(InputMatch[1]))
 	fmt.Println("Input: ",pro.Input)
 	OutputMatch := h.OutputRx.FindStringSubmatch(html)
 	if len(OutputMatch) != 2 {
 		log.Println(OutputMatch)
 		return ErrMatchFailed
 	}
-	pro.Output = template.HTML(html.UnescapeString(OutputMatch[1]))
+	pro.Output = template.HTML(h.ReplaceHtml(OutputMatch[1]))
 	fmt.Println("Output: ",pro.Output)
 
 	testIn := h.testInRx.FindStringSubmatch(html)
@@ -221,7 +221,7 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		log.Println(hint)
 		return ErrMatchFailed
 	}
-	pro.Hint = template.HTML(html.UnescapeString(hint[1]))
+	pro.Hint = template.HTML(h.ReplaceHtml(hint[1]))
 	fmt.Println("Out: ",pro.Hint)
 
 	proModel := &model.ProblemModel{}
