@@ -92,9 +92,9 @@ func (this *ProblemModel) Detail(pid int) (*Problem, error) {
 	} else if err != nil {
 		return nil, OpErr
 	}
-	if one.ROJ == 'VJ' {
-        InHTML = template.HTML(In)
-        OutHTML = template.HTML(Out)
+	if one.ROJ == "VJ" {
+        one.InHTML = template.HTML(one.In)
+        one.OutHTML = template.HTML(one.Out)
 	}
 
 	return &one, nil
