@@ -32,17 +32,17 @@
     <p>{{.Input}}</p>
     <div class="problemIteam">Output:</div>
     <p>{{.Output}}</p>
-    {{if .In}}
+    {{if .InHTML}}
       <div class="problemIteam">Sample Input:</div>
       <pre class="sample">{{.InHTML}}</pre>
-    {{else}}
+    {{else if .In}}
       <div class="problemIteam">Sample Input:</div>
       <pre class="sample">{{.In}}</pre>
     {{end}}
-    {{if .Out}}
+    {{if .OutHTML}}
       <div class="problemIteam">Sample Output:</div>
       <pre class="sample">{{.OutHTML}}</pre>
-    {{else}}
+    {{else if .Out}}
       <div class="problemIteam">Sample Output:</div>
       <pre class="sample">{{.Out}}</pre>
     {{end}}

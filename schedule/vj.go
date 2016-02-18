@@ -59,22 +59,22 @@ func (h *VJJudger) Init() {
 	MemoryPat := `<td>Memory Limit:</td>\s*<td>(\d+) KB</td>`
 	h.MemoryRx = regexp.MustCompile(MemoryPat)
 
-	DescriptionPat := `<textarea name="description.description" cols="120" rows="15" id="description">(.*?)</textarea>`
+	DescriptionPat := `(?s)<textarea name="description.description" cols="120" rows="15" id="description">(.*?)</textarea>`
 	h.DescriptionRx = regexp.MustCompile(DescriptionPat)
-	InputPat := `<textarea name="description.input" cols="120" rows="15" id="input">(.*?)</textarea>`
+	InputPat := `(?s)<textarea name="description.input" cols="120" rows="15" id="input">(.*?)</textarea>`
 	h.InputRx = regexp.MustCompile(InputPat)
-	OutputPat := `<textarea name="description.output" cols="120" rows="15" id="output">(.*?)</textarea>`
+	OutputPat := `(?s)<textarea name="description.output" cols="120" rows="15" id="output">(.*?)</textarea>`
 	h.OutputRx = regexp.MustCompile(OutputPat)
 
-	testInPat := `<textarea name="description.sampleInput" cols="120" rows="15" id="sampleInput">(.*?)</textarea>`
+	testInPat := `(?s)<textarea name="description.sampleInput" cols="120" rows="15" id="sampleInput">(.*?)</textarea>`
 	h.testInRx = regexp.MustCompile(testInPat)
-	testOutPat := `<textarea name="description.sampleOutput" cols="120" rows="15" id="sampleOutput">(.*?)</textarea>`
+	testOutPat := `(?s)<textarea name="description.sampleOutput" cols="120" rows="15" id="sampleOutput">(.*?)</textarea>`
 	h.testOutRx = regexp.MustCompile(testOutPat)
 
 	srcPat := `<td>Source:</td><td>(.*?)</td>`
 	h.srcRx = regexp.MustCompile(srcPat)
 
-	hintPat := `<textarea name="description.hint" cols="120" rows="15" id="hint">(.*?)</textarea>`
+	hintPat := `(?s)<textarea name="description.hint" cols="120" rows="15" id="hint">(.*?)</textarea>`
 	h.hintRx = regexp.MustCompile(hintPat)
 
 	VJLogfile, err := os.Create("log/vj.log")
@@ -128,7 +128,7 @@ func (h *VJJudger) GetProblemPage(pid string) (string, error) {
 	}
 	b, _ = ioutil.ReadAll(resp.Body)
 	html = string(b)
-	eidPat := `"/vjudge/problem/toEditDescription.action.id=(.*?)"`
+	eidPat := `"/vjudge/problem/toEditDescription.action\?id=(.*?)"`
 	eidRx := regexp.MustCompile(eidPat)
 	eidMatch := eidRx.FindStringSubmatch(html)
 	if len(eidMatch) != 2 {
