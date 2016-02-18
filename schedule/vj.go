@@ -214,14 +214,14 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		log.Println(testIn)
 		return ErrMatchFailed
 	}
-	pro.In = template.HTML(h.ReplaceHtml(testIn[1])
+	pro.In = h.ReplaceHtml(testIn[1])
 	fmt.Println("In",pro.In)
 	testOut := h.testOutRx.FindStringSubmatch(html)
 	if len(testOut) != 2 {
 		log.Println(testOut)
 		return ErrMatchFailed
 	}
-	pro.Out = template.HTML(h.ReplaceHtml(testOut[1]))
+	pro.Out = h.ReplaceHtml(testOut[1])
 	fmt.Println("Out",pro.Out)
 
 	src := h.srcRx.FindStringSubmatch(html)
