@@ -28,6 +28,8 @@ type Problem struct {
 
 	In  string `json:"in"bson:"in"xml:"sample_input"`
 	Out string `json:"out"bson:"out"xml:"sample_output"`
+	InHTML  template.HTML `json:"inhtml"bson:"inhtml"xml:"inhtml"`
+	OutHTML template.HTML `json:"outhtml"bson:"outhtml"xml:"outhtml"`
 
 	Solve  int `json:"solve"bson:"solve"`
 	Submit int `json:"submit"bson:"submit"`
@@ -89,6 +91,10 @@ func (this *ProblemModel) Detail(pid int) (*Problem, error) {
 		return nil, NotFoundErr
 	} else if err != nil {
 		return nil, OpErr
+	}
+	if one.ROJ == 'VJ' {
+        InHTML = template.HTML(In)
+        OutHTML = template.HTML(Out)
 	}
 
 	return &one, nil
