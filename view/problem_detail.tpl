@@ -34,11 +34,11 @@
     <p>{{.Output}}</p>
     {{if .In}}
       <div class="problemIteam">Sample Input:</div>
-      <pre class="sample">{{.In}}</pre>
+      <p>{{.In}}</p>
     {{end}}
     {{if .Out}}
       <div class="problemIteam">Sample Output:</div>
-      <pre class="sample">{{.Out}}</pre>
+      <p>{{.Out}}</p>
     {{end}}
     {{if .Hint}}
       <div class="problemIteam">Hint:</div>

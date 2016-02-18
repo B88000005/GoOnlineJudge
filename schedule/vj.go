@@ -14,6 +14,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"fmt"
 )
 
 type VJJudger struct {
@@ -165,6 +166,7 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		return ErrMatchFailed
 	}
 	pro.Title = titleMatch[1]
+	fmt.Println("Title",pro.Title)
 
 //	if strings.Index(html, "Special Judge") >= 0 {
 //		pro.Special = 1
@@ -176,6 +178,7 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		return ErrMatchFailed
 	}
 	pro.Time, _ = strconv.Atoi(TimeMatch[1])
+	fmt.Println("Time",pro.Time)
 
 	MemoryMatch := h.MemoryRx.FindStringSubmatch(html)
 	if len(MemoryMatch) != 2 {
@@ -183,6 +186,7 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		return ErrMatchFailed
 	}
 	pro.Memory, _ = strconv.Atoi(MemoryMatch[1])
+	fmt.Println("Memory",pro.Memory)
 
 	DescriptionMatch := h.DescriptionRx.FindStringSubmatch(html)
 	if len(DescriptionMatch) != 2 {
@@ -196,26 +200,29 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		return ErrMatchFailed
 	}
 	pro.Input = template.HTML(h.ReplaceHtml(InputMatch[1]))
+	fmt.Println("Input",pro.Input)
 	OutputMatch := h.OutputRx.FindStringSubmatch(html)
 	if len(OutputMatch) != 2 {
 		log.Println(OutputMatch)
 		return ErrMatchFailed
 	}
+	pro.Output = template.HTML(h.ReplaceHtml(OutputMatch[1]))
+	fmt.Println("Output",pro.Output)
 
 	testIn := h.testInRx.FindStringSubmatch(html)
 	if len(testIn) != 2 {
 		log.Println(testIn)
 		return ErrMatchFailed
 	}
-	pro.In = ""
+	pro.In = template.HTML(h.ReplaceHtml(testIn[1])
+	fmt.Println("In",pro.In)
 	testOut := h.testOutRx.FindStringSubmatch(html)
 	if len(testOut) != 2 {
 		log.Println(testOut)
 		return ErrMatchFailed
 	}
-	pro.Out = ""
-
-	pro.Output = template.HTML(h.ReplaceHtml(OutputMatch[1]+"\n"+testIn[1]+"\n"+testOut[1]))
+	pro.Out = template.HTML(h.ReplaceHtml(testOut[1]))
+	fmt.Println("Out",pro.Out)
 
 	src := h.srcRx.FindStringSubmatch(html)
 	if len(src) >= 2 {
