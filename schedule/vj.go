@@ -120,7 +120,7 @@ func (h *VJJudger) GetProblemPage(pid string) (string, error) {
 		return "", ErrConnectFailed
 	}
 	b, _ := ioutil.ReadAll(resp.Body)
-	if string(b) != "true" {
+	if string(b) != "\"true\"" {
 		return "", ErrConnectFailed
     }
 
