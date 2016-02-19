@@ -14,7 +14,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"fmt"
 )
 
 type VJJudger struct {
@@ -116,11 +115,14 @@ func (h *VJJudger) GetProblemPage(pid string) (string, error) {
     })
 	resp.Body.Close()
 
-	b, _ := ioutil.ReadAll(resp.Body)
-	html := string(b)
-
-
-	//resp, err = h.client.Get("http://acm.hust.edu.cn/vjudge/user/checkLogInStatus.action")
+	resp, err = h.client.Get("http://acm.hust.edu.cn/vjudge/user/checkLogInStatus.action")
+	if err != nil {
+		return "", ErrConnectFailed
+	}
+	b, _ = ioutil.ReadAll(resp.Body)
+	if string(b) != "true" {
+		return "", ErrConnectFailed
+    }
 
 	resp, err = h.client.Get("http://acm.hust.edu.cn/vjudge/problem/viewProblem.action?id=" + pid)
 	if err != nil {
@@ -166,7 +168,7 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		return ErrMatchFailed
 	}
 	pro.Title = titleMatch[1]
-	fmt.Println("Title",pro.Title)
+//	fmt.Println("Title",pro.Title)
 
 //	if strings.Index(html, "Special Judge") >= 0 {
 //		pro.Special = 1
@@ -178,7 +180,7 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		return ErrMatchFailed
 	}
 	pro.Time, _ = strconv.Atoi(TimeMatch[1])
-	fmt.Println("Time",pro.Time)
+//	fmt.Println("Time",pro.Time)
 
 	MemoryMatch := h.MemoryRx.FindStringSubmatch(html)
 	if len(MemoryMatch) != 2 {
@@ -186,7 +188,7 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		return ErrMatchFailed
 	}
 	pro.Memory, _ = strconv.Atoi(MemoryMatch[1])
-	fmt.Println("Memory",pro.Memory)
+//	fmt.Println("Memory",pro.Memory)
 
 	DescriptionMatch := h.DescriptionRx.FindStringSubmatch(html)
 	if len(DescriptionMatch) != 2 {
@@ -200,14 +202,14 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		return ErrMatchFailed
 	}
 	pro.Input = template.HTML(h.ReplaceHtml(InputMatch[1]))
-	fmt.Println("Input",pro.Input)
+//	fmt.Println("Input",pro.Input)
 	OutputMatch := h.OutputRx.FindStringSubmatch(html)
 	if len(OutputMatch) != 2 {
 		log.Println(OutputMatch)
 		return ErrMatchFailed
 	}
 	pro.Output = template.HTML(h.ReplaceHtml(OutputMatch[1]))
-	fmt.Println("Output",pro.Output)
+//	fmt.Println("Output",pro.Output)
 
 	testIn := h.testInRx.FindStringSubmatch(html)
 	if len(testIn) != 2 {
@@ -215,14 +217,14 @@ func (h *VJJudger) SetDetail(pid string, html string) error {
 		return ErrMatchFailed
 	}
 	pro.In = h.ReplaceHtml(testIn[1])
-	fmt.Println("In",pro.In)
+//	fmt.Println("In",pro.In)
 	testOut := h.testOutRx.FindStringSubmatch(html)
 	if len(testOut) != 2 {
 		log.Println(testOut)
 		return ErrMatchFailed
 	}
 	pro.Out = h.ReplaceHtml(testOut[1])
-	fmt.Println("Out",pro.Out)
+//	fmt.Println("Out",pro.Out)
 
 	src := h.srcRx.FindStringSubmatch(html)
 	if len(src) >= 2 {
