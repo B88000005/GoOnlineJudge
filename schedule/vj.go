@@ -119,7 +119,7 @@ func (h *VJJudger) GetProblemPage(pid string) (string, error) {
 	if err != nil {
 		return "", ErrConnectFailed
 	}
-	b, _ = ioutil.ReadAll(resp.Body)
+	b, _ := ioutil.ReadAll(resp.Body)
 	if string(b) != "true" {
 		return "", ErrConnectFailed
     }
@@ -129,7 +129,7 @@ func (h *VJJudger) GetProblemPage(pid string) (string, error) {
 		return "", ErrConnectFailed
 	}
 	b, _ = ioutil.ReadAll(resp.Body)
-	html = string(b)
+	html := string(b)
 	eidPat := `"/vjudge/problem/toEditDescription.action\?id=(.*?)"`
 	eidRx := regexp.MustCompile(eidPat)
 	eidMatch := eidRx.FindStringSubmatch(html)
