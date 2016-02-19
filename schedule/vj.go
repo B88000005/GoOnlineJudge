@@ -132,12 +132,12 @@ func (h *VJJudger) GetProblemPage(pid string) (string, error) {
 	html := string(b)
 	eidPat := `"/vjudge/problem/toEditDescription.action\?id=(.*?)"`
 	eidRx := regexp.MustCompile(eidPat)
-	eidMatch := eidRx.FindStringSubmatch(html)
-	if len(eidMatch) != 2 {
+	eidMatch := eidRx.FindAllStringSubmatch(html,-1)
+	if len(eidMatch) < 1 {
 		log.Println(eidMatch)
 		return "", ErrConnectFailed
 	}
-	eid := eidMatch[1]
+	eid := eidMatch[len(eidMatch)-1][1]
 
 	resp, err = h.client.Get("http://acm.hust.edu.cn/vjudge/problem/toEditDescription.action?id=" + eid)
 	if err != nil {
